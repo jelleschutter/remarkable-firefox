@@ -5,7 +5,12 @@ from zipfile import ZipFile
 
 id = 'bfhkfdnddlhfippjbflipboognpdpoeh'
 url = f'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=92.0.4515.159&x=id%3D{id}%26installsource%3Dondemand%26uc&nacl_arch=x86-64&acceptformat=crx2,crx3'
-filename = 'chrome_addon'
+tmp_dir = './tmp'
+filename = tmp_dir + '/chrome_addon'
+
+# create tmp dir
+if not os.path.exists(tmp_dir):
+  os.mkdir(tmp_dir)
 
 # get crx file
 r = requests.get(url=url, stream=True)
@@ -33,4 +38,4 @@ with open(crx_filename, 'rb') as fd:
 
 # extract zip file
 zip = ZipFile(zip_filename)
-zip.extractall('./chrome_addon/')
+zip.extractall('./tmp/chrome_addon/')

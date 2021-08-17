@@ -1,35 +1,46 @@
 from helper import copyDir, readJson, saveJson, rmDir, encloseText
 import os
 
-rmDir('./firefox_addon/')
-copyDir('./chrome_addon/', './firefox_addon/')
+tmp_dir = './tmp'
 
-rmDir('./firefox_addon/_metadata/')
+# create tmp dir
+if not os.path.exists(tmp_dir):
+  os.mkdir(tmp_dir)
 
-manifest = readJson('./firefox_addon/manifest.json')
+# reset firefox to current chrome version
+rmDir(tmp_dir + '/firefox_addon/')
+copyDir(tmp_dir + '/chrome_addon/', tmp_dir + '/firefox_addon/')
 
+# remove unnecessary files
+rmDir(tmp_dir + '/firefox_addon/_metadata/')
+
+# load manifest
+manifest = readJson(tmp_dir + '/firefox_addon/manifest.json')
+
+# remove unnecessary keys
 manifest.pop('options_page')
 manifest.pop('update_url')
-manifest.pop('key')
+if 'key' in manifest:
+  manifest.pop('key')
 
+# update incompatible keys
 manifest['background'] = { 'scripts': ['background.js'] }
-
 manifest['options_ui'] = { 'page': 'options.html' }
-
 manifest['permissions'] = [e for e in manifest['permissions'] if e != 'printerProvider']
-
 manifest['browser_specific_settings'] = {
   'gecko': {
     'id': 'remarkable@schutter.xyz'
   }
 }
 
-saveJson('./firefox_addon/manifest.json', manifest)
+# save updated manifest
+saveJson(tmp_dir + '/firefox_addon/manifest.json', manifest)
 
-for js_file in os.listdir('./firefox_addon/'):
+# add browser var as chrome to js
+for js_file in os.listdir(tmp_dir + '/firefox_addon/'):
   if js_file.endswith('.js'):
     encloseText(
-      './firefox_addon/' + js_file,
+      tmp_dir + '/firefox_addon/' + js_file,
       '(function(chrome) {\n',
       '\n})(browser);'
     )
