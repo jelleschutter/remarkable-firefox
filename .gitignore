@@ -1,3 +1,5 @@
 __pycache__
 chrome_addon
+*.crx
+*.zip
 firefox_addon
