@@ -1,6 +1,10 @@
 import os
 import json
 import shutil
+from datetime import datetime
+from jwcrypto.jwt import JWT
+from jwcrypto.jwk import JWK
+import uuid
 
 def rmDir(path):
   if os.path.exists(path):
@@ -32,3 +36,16 @@ def encloseText(path, prefix, suffix):
     f.write(prefix)
     f.write(content)
     f.write(suffix)
+
+def generateToken(issuer, key):
+  timestamp = round(datetime.utcnow().timestamp())
+  data = {
+    'iss': issuer,
+    'iat': timestamp,
+    'exp': timestamp + 300,
+    'jti': str(uuid.uuid4())
+  }
+  jwk = JWK(k=key, kty='oct')
+  token = JWT(header={'alg': 'HS256'}, claims=data)
+  token.make_signed_token(jwk)
+  return token.serialize()
