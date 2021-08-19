@@ -8,9 +8,12 @@ if not os.path.exists(tmp_dir):
   os.mkdir(tmp_dir)
 
 # reset firefox to current chrome version
+print('Resetting Firefox AddOn to current Chrome Extension...')
 rmDir(tmp_dir + '/firefox_addon/')
 copyDir(tmp_dir + '/chrome_addon/', tmp_dir + '/firefox_addon/')
+print('Firefox AddOn resetted.')
 
+print('Apply required changes to Firefox AddOn.')
 # remove unnecessary files
 rmDir(tmp_dir + '/firefox_addon/_metadata/')
 
@@ -35,8 +38,10 @@ manifest['browser_specific_settings'] = {
 
 # save updated manifest
 saveJson(tmp_dir + '/firefox_addon/manifest.json', manifest)
+print('Firefox AddOn fixed.')
 
 # add browser var as chrome to js
+print('Adding browser var as chrome to js...')
 for js_file in os.listdir(tmp_dir + '/firefox_addon/'):
   if js_file.endswith('.js'):
     encloseText(
@@ -44,3 +49,4 @@ for js_file in os.listdir(tmp_dir + '/firefox_addon/'):
       '(function(chrome) {\n',
       '\n})(browser);'
     )
+print('Added browser var as chrome to js.')
