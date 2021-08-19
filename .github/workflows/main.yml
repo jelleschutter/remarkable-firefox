@@ -25,4 +25,7 @@ jobs:
     - name: Convert Chrome Extension to Firefox AddOn
       run: python ./chrome_to_firefox.py
     - name: Publish Firefox AddOn
+      env:
+        MOZILLA_API_KEY: ${{ secrets.MOZILLA_API_KEY }}
+        MOZILLA_API_SECRET: ${{ secrets.MOZILLA_API_SECRET }}
       run: python ./publish_firefox.py
