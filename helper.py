@@ -29,14 +29,6 @@ def saveJson(path, data):
   with open(path, 'w') as f:
     json.dump(data, f, indent=3)
 
-def encloseText(path, prefix, suffix):
-  with open(path, 'r', encoding='utf-8') as f:
-    content = f.read()
-  with open(path, 'w', encoding='utf-8') as f:
-    f.write(prefix)
-    f.write(content)
-    f.write(suffix)
-
 def generateToken(issuer, key):
   timestamp = round(datetime.utcnow().timestamp())
   data = {

@@ -1,4 +1,4 @@
-from helper import copyDir, readJson, saveJson, rmDir, encloseText
+from helper import copyDir, readJson, saveJson, rmDir
 import os
 
 tmp_dir = './tmp'
@@ -39,14 +39,3 @@ manifest['browser_specific_settings'] = {
 # save updated manifest
 saveJson(tmp_dir + '/firefox_addon/manifest.json', manifest)
 print('Firefox AddOn fixed.')
-
-# add browser var as chrome to js
-print('Adding browser var as chrome to js...')
-for js_file in os.listdir(tmp_dir + '/firefox_addon/'):
-  if js_file.endswith('.js'):
-    encloseText(
-      tmp_dir + '/firefox_addon/' + js_file,
-      '(function(chrome) {\n',
-      '\n})(browser);'
-    )
-print('Added browser var as chrome to js.')
