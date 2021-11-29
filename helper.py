@@ -4,7 +4,11 @@ import shutil
 from datetime import datetime
 from jwcrypto.jwt import JWT
 from jwcrypto.jwk import JWK
+import base64
+from math import floor
 import uuid
+import requests
+import sys
 
 def rmDir(path):
   if os.path.exists(path):
@@ -30,14 +34,29 @@ def saveJson(path, data):
     json.dump(data, f, indent=3)
 
 def generateToken(issuer, key):
-  timestamp = round(datetime.utcnow().timestamp())
+  timestamp = floor(datetime.now().timestamp())
   data = {
     'iss': issuer,
     'iat': timestamp,
     'exp': timestamp + 300,
     'jti': str(uuid.uuid4())
   }
-  jwk = JWK(k=key, kty='oct')
+  key_b64 = (
+    base64
+    .urlsafe_b64encode(key.encode('ascii'))
+    .decode()
+  )
+  jwk = JWK(
+    k=key_b64,
+    kty='oct'
+  )
   token = JWT(header={'alg': 'HS256'}, claims=data)
   token.make_signed_token(jwk)
   return token.serialize()
+
+def checkResponse(r: requests.Response):
+  try:
+    r.raise_for_status()
+  except:
+    print(r.json(), file=sys.stderr)
+    raise
