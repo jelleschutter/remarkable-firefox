@@ -7,7 +7,6 @@ from jwcrypto.jwk import JWK
 import base64
 from math import floor
 import uuid
-import requests
 import sys
 
 def rmDir(path):
@@ -54,9 +53,9 @@ def generateToken(issuer, key):
   token.make_signed_token(jwk)
   return token.serialize()
 
-def checkResponse(r: requests.Response):
+def checkResponse(response):
   try:
-    r.raise_for_status()
+    response.raise_for_status()
   except:
-    print(r.json(), file=sys.stderr)
+    print(response.json(), file=sys.stderr)
     raise
