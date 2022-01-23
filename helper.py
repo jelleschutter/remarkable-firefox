@@ -33,7 +33,7 @@ def saveJson(path, data):
     json.dump(data, f, indent=3)
 
 def generateToken(issuer, key):
-  timestamp = floor(datetime.now().timestamp())
+  timestamp = floor(datetime.utcnow().timestamp())
   data = {
     'iss': issuer,
     'iat': timestamp,
