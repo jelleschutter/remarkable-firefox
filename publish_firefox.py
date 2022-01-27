@@ -1,5 +1,5 @@
 import os
-from helper import readJson, generateToken
+from helper import readJson, generateToken, checkResponse
 import requests
 import shutil
 
@@ -25,6 +25,7 @@ token = generateToken(os.environ['MOZILLA_API_KEY'], os.environ['MOZILLA_API_SEC
 # check if version exists
 print('Checking if version exists...')
 r = requests.get(f'https://addons.mozilla.org/api/v5/addons/addon/{uuid}/versions/', headers={'Authorization': f'JWT {token}'})
+checkResponse(r)
 version_result = r.json()
 previous_versions = [v['version'] for v in version_result['results']]
 
@@ -35,6 +36,7 @@ if not version in previous_versions:
   print('Uploading new version...')
   files = {'upload': open(tmp_dir + '/firefox_addon.zip', 'rb')}
   r = requests.post(f'https://addons.mozilla.org/api/v5/addons/{uuid}/versions/{version}', headers={'Authorization': f'JWT {token}'}, files=files)
+  checkResponse(r)
   print('Uploaded new version:')
   print(r.text)
 else:
