@@ -5,7 +5,7 @@ This repo converts the offical [reMarkable Chrome Extension](https://chrome.goog
 The process happens in 3 steps:
 ### Step 1: Download Chrome Extension
 ```shell
-python ./chrome_download.py
+python ./download_chrome.py
 ```
 This step downloads the current version of the Chrome Extension.
 
